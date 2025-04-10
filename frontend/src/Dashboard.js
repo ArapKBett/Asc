@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Web3 from 'web3';
+
+const contractABI = require('./EvidenceChain.json').abi; // Copy ABI from backend/contracts/EvidenceChain.json
+const contractAddress = 'YOUR_CONTRACT_ADDRESS'; // Replace with deployed contract address
 
 function Dashboard() {
   const [hash, setHash] = useState('');
@@ -7,10 +11,13 @@ function Dashboard() {
 
   const handleVerify = async () => {
     try {
-      const res = await axios.get(`${process.env.REACT_APP_API_URL}/verify/${hash}`);
-      setResult(res.data.valid ? 'Valid' : 'Tampered');
+      const web3 = new Web3('https://sepolia.infura.io/v3/YOUR_INFURA_PROJECT_ID'); // Infura for read-only
+      const contract = new web3.eth.Contract(contractABI, contractAddress);
+      const isValid = await contract.methods.verifyEvidence(hash).call();
+      setResult(isValid ? 'Valid' : 'Tampered');
     } catch (err) {
       console.error(err);
+      setResult('Error verifying evidence');
     }
   };
 
