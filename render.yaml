@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: Asc-backend
+    env: docker
+    plan: free
+    repo: https://github.com/ArapKBett/Asc
+    buildCommand: docker build -t securechain-backend .
+    startCommand: docker run -p 5000:5000 securechain-backend
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: 1
+  - type: web
+    name: Asc-frontend
+    env: node
+    plan: free
+    repo: https://github.com/ArapKBett/Asc
+    buildCommand: cd frontend && npm install && npm run build
+    startCommand: npx serve -s frontend/build -l 3000
