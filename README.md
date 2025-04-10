@@ -21,3 +21,20 @@ A blockchain-based digital evidence management system for forensic investigation
 - Evidence encryption (AES-256 via C++).
 - Blockchain storage (Ethereum/Ganache).
 - Forensic verification and chain of custody.
+
+- Replace `YOUR_GANACHE_PRIVATE_KEY` in `blockchain.py` with a key from Ganache.
+
+
+
+Ensure all paths (e.g., ../build/crypto) match your local setup.
+
+
+
+Test locally before deploying to Render.
+
+
+
+Assets (logo.png, favicon.ico, background.jpg) need to be created or downloaded as described.
+
+
+
