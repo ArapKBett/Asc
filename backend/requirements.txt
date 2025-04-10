@@ -1,3 +1,2 @@
 Flask==2.3.2
-web3>=6.11.0  # Newer version with prebuilt wheels
 pyOpenSSL==23.2.0
