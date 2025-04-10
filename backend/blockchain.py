@@ -1,13 +1,14 @@
 from web3 import Web3
 import json
+import os
 
 class Blockchain:
     def __init__(self):
-        # Connect to Ganache (replace with Render URL post-deployment)
-        self.w3 = Web3(Web3.HTTPProvider('http://127.0.0.1:7545'))
-        self.account = self.w3.eth.accounts[0]
+        # Use Infura Sepolia testnet URL with your Project ID
+        self.w3 = Web3(Web3.HTTPProvider('https://sepolia.infura.io/v3/YOUR_INFURA_PROJECT_ID'))
+        # Replace with your Ethereum account address (e.g., from MetaMask)
+        self.account = 'YOUR_PUBLIC_ADDRESS'
         
-        # Load deployed contract
         with open('../contracts/EvidenceChain.json', 'r') as f:
             contract_data = json.load(f)
         self.contract = self.w3.eth.contract(
@@ -22,7 +23,8 @@ class Blockchain:
             'gas': 2000000,
             'gasPrice': self.w3.toWei('20', 'gwei')
         })
-        signed_tx = self.w3.eth.account.signTransaction(tx, private_key='YOUR_GANACHE_PRIVATE_KEY')
+        # Use environment variable for private key
+        signed_tx = self.w3.eth.account.signTransaction(tx, private_key=os.getenv('YOUR_GANACHE_PRIVATE_KEY'))
         tx_hash = self.w3.eth.sendRawTransaction(signed_tx.rawTransaction)
         return self.w3.toHex(tx_hash)
 
