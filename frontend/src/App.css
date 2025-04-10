@@ -1,0 +1,13 @@
+.App {
+  min-height: 100vh;
+  color: #00ff00; /* Neon green for hacker aesthetic */
+  font-family: 'Courier New', Courier, monospace;
+  text-align: center;
+  padding: 20px;
+  position: relative;
+  z-index: 1; /* Ensure content stays above canvas */
+}
+
+h1 {
+  text-shadow: 0 0 10px #00ff00;
+}
