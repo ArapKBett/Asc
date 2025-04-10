@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-function Upload() {
+const contractABI = require('./EvidenceChain.json').abi; // Copy ABI from backend/contracts/EvidenceChain.json
+const contractAddress = 'YOUR_CONTRACT_ADDRESS'; // Replace with deployed contract address
+
+function Upload({ web3, account }) {
   const [file, setFile] = useState(null);
   const [response, setResponse] = useState(null);
 
@@ -9,14 +12,31 @@ function Upload() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!web3 || !account) {
+      alert('Please connect MetaMask!');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('file', file);
 
     try {
+      // Upload file to backend
       const res = await axios.post(`${process.env.REACT_APP_API_URL}/upload`, formData);
-      setResponse(res.data);
+      const { file_hash, filename } = res.data;
+
+      // Interact with smart contract via MetaMask
+      const contract = new web3.eth.Contract(contractABI, contractAddress);
+      const tx = await contract.methods.storeEvidence(file_hash, filename).send({ from: account });
+      
+      setResponse({
+        file_hash,
+        tx_hash: tx.transactionHash,
+        encrypted_path: res.data.encrypted_path
+      });
     } catch (err) {
       console.error(err);
+      alert('Error uploading or storing evidence');
     }
   };
 
