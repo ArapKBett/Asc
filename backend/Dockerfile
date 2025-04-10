@@ -21,8 +21,8 @@ COPY . /app
 # Install Python dependencies
 RUN pip3 install -r requirements.txt
 
-# Compile the C++ encryption binary
-RUN g++ -o ../build/crypto crypto.cpp -lssl -lcrypto
+# Create build directory and compile the C++ encryption binary
+RUN mkdir -p ../build && g++ -o ../build/crypto crypto.cpp -lssl -lcrypto
 
 # Expose port 5000 (Flask default)
 EXPOSE 5000
