@@ -1,12 +1,32 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Web3 from 'web3';
 import Upload from './Upload';
 import Dashboard from './Dashboard';
 import './App.css';
 
 function App() {
+  const [web3, setWeb3] = useState(null);
+  const [account, setAccount] = useState(null);
+
   useEffect(() => {
-    // Code rain effect
+    const connectMetaMask = async () => {
+      if (window.ethereum) {
+        const web3Instance = new Web3(window.ethereum);
+        try {
+          await window.ethereum.request({ method: 'eth_requestAccounts' });
+          const accounts = await web3Instance.eth.getAccounts();
+          setWeb3(web3Instance);
+          setAccount(accounts[0]);
+        } catch (error) {
+          console.error('MetaMask connection failed:', error);
+        }
+      } else {
+        console.log('Please install MetaMask!');
+      }
+    };
+    connectMetaMask();
+
     const canvas = document.createElement('canvas');
     document.body.appendChild(canvas);
     const ctx = canvas.getContext('2d');
@@ -47,8 +67,9 @@ function App() {
       <div className="App">
         <img src="/logo.png" alt="SecureChain Logo" style={{ width: '150px' }} />
         <h1>SecureChain Forensics</h1>
+        {account ? <p>Connected: {account}</p> : <p>Connecting to MetaMask...</p>}
         <Switch>
-          <Route exact path="/" component={Upload} />
+          <Route exact path="/" render={(props) => <Upload {...props} web3={web3} account={account} />} />
           <Route path="/dashboard" component={Dashboard} />
         </Switch>
       </div>
