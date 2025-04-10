@@ -11,7 +11,7 @@ function Dashboard() {
 
   const handleVerify = async () => {
     try {
-      const web3 = new Web3('https://sepolia.infura.io/v3/YOUR_INFURA_PROJECT_ID'); // Infura for read-only
+      const web3 = new Web3('https://sepolia.infura.io/v3/e1881e44492c4f7282b95acfdb16ade1'); // Infura for read-only
       const contract = new web3.eth.Contract(contractABI, contractAddress);
       const isValid = await contract.methods.verifyEvidence(hash).call();
       setResult(isValid ? 'Valid' : 'Tampered');
